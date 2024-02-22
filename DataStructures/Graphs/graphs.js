@@ -26,17 +26,75 @@ class Graph {
 		}
 		delete this.adjacencyList[vertex];
 	}
+	DFSRecursive(start) {
+		const result = [];
+		const visited = {};
+		const dfs = (vertex) => {
+			if (!vertex) return;
+			visited[vertex] = true;
+			result.push(vertex);
+			this.adjacencyList[vertex].forEach((neighbor) => {
+				if (!visited[neighbor]) {
+					return dfs(neighbor);
+				}
+			});
+		};
+		dfs(start);
+		return result;
+	}
+	DFSIterative(start) {
+		const stack = [start];
+		const result = [];
+		const visited = {};
+		let currentVertex;
+
+		visited[start] = true;
+		while (stack.length) {
+			currentVertex = stack.pop();
+			result.push(currentVertex);
+			this.adjacencyList[currentVertex].forEach((neighbor) => {
+				if (!visited[neighbor]) {
+					visited[neighbor] = true;
+					stack.push(neighbor);
+				}
+			});
+		}
+		return result;
+	}
+	BFS(start) {
+		const queue = [start];
+		const result = [];
+		const visited = {};
+		let currentVertex;
+		visited[start] = true;
+		while (queue.length) {
+			currentVertex = queue.shift();
+			result.push(currentVertex);
+			this.adjacencyList[currentVertex].forEach((neighbor) => {
+				if (!visited[neighbor]) {
+					visited[neighbor] = true;
+					queue.push(neighbor);
+				}
+			});
+		}
+		return result;
+	}
 }
 
 let g = new Graph();
-g.addVertex("Tokyo");
-g.addVertex("Kyoto");
-g.addVertex("Osaka");
-g.addVertex("Nara");
-g.addEdge("Tokyo", "Kyoto");
-g.addEdge("Tokyo", "Osaka");
-g.addEdge("Tokyo", "Nara");
-g.addEdge("Kyoto", "Osaka");
-g.addEdge("Kyoto", "Nara");
-g.removeEdge("Tokyo", "Kyoto");
-console.log(g.adjacencyList);
+g.addVertex("A");
+g.addVertex("B");
+g.addVertex("C");
+g.addVertex("D");
+g.addVertex("E");
+g.addVertex("F");
+g.addEdge("A", "B");
+g.addEdge("A", "C");
+g.addEdge("B", "D");
+g.addEdge("C", "E");
+g.addEdge("D", "E");
+g.addEdge("D", "F");
+g.addEdge("E", "F");
+console.log(g.DFSRecursive("A"));
+console.log(g.DFSIterative("A"));
+console.log(g.BFS("A"));
